@@ -6,6 +6,8 @@
       apt: name={{item}} state=present update_cache=yes
       with_items:
         - vim
+        - python-httplib2
+         
 
     - name: install nginx
       apt: name=nginx state=present update_cache=yes
