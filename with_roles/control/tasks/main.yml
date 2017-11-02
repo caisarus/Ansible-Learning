@@ -6,3 +6,4 @@
     - curl
     - vim
     - python-httplib2
+    - tree
