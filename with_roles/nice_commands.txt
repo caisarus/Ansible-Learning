@@ -1,2 +1,3 @@
 ansible -m ping all
 ansible -m setup 192.168.0.91
+ansible-galaxy init mysql
