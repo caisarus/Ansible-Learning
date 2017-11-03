@@ -2,3 +2,5 @@ ansible -m ping all
 ansible -m setup 192.168.0.91
 ansible-galaxy init mysql
 ansible -a ls /etc/nginx/sites-enabled/ 192.168.0.87
+ansible-vault create vault
+ansible-vault edit vault
