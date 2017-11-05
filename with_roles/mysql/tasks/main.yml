@@ -1,13 +1,13 @@
 ---
 # tasks file for mysql
 - name: install tools
-  apt: name={{item}} state=present update_cache=yes
+  apt: name={{item}} state=present
   with_items:
     - vim
     - python-mysqldb
 
 - name: install mysql-server
-  apt: name=mysql-server state=present update_cache=yes
+  apt: name=mysql-server state=present
 
 - name: ensure mysql started
   service: name=mysql state=started enabled=yes

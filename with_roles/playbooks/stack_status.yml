@@ -1,6 +1,7 @@
 ---
 - hosts: loadbalancer
   become: true
+  gather_facts: false
   tasks:
     - name: verfiy nginx service
       command: service nginx status
@@ -10,6 +11,7 @@
 
 - hosts: webserver
   become: true
+  gather_facts: false
   tasks:
     - name: verfiy apache2 service
       command: service apache2 status
@@ -28,6 +30,7 @@
       wait_for: host={{ansible_ens160.ipv4.address}} port=3306 timeout=1
 
 - hosts: control
+  gather_facts: false
   tasks:
     - name: verify end-to-end response
       uri: url=http://{{item}} return_content=yes
@@ -51,6 +54,7 @@
 
 
 - hosts: loadbalancer
+  gather_facts: false
   tasks:
     - name: verify backend response 
       uri: url=http://{{item}} return_content=yes
