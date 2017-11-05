@@ -5,3 +5,6 @@ ansible -a ls /etc/nginx/sites-enabled/ 192.168.0.87
 ansible-vault create vault
 ansible-vault edit vault
 ansible -a ls /etc/nginx/sites-enabled/ 192.168.0.87
+ansible-playbook site.yml --list-tags
+ansible-playbook site.yml --tags packages
+ansible-playbook site.yml --skip-tags packages

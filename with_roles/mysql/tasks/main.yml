@@ -5,9 +5,11 @@
   with_items:
     - vim
     - python-mysqldb
+  tags: [ 'packages' ]
 
 - name: install mysql-server
   apt: name=mysql-server state=present
+  tags: [ 'packages' ]
 
 - name: ensure mysql started
   service: name=mysql state=started enabled=yes

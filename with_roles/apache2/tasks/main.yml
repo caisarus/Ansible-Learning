@@ -4,12 +4,14 @@
   apt: name={{item}} state=present
   with_items:
     - vim
+  tags: [ 'packages' ]
 
 - name: install web components
   apt: name={{item}} state=present
   with_items:
     - apache2
     - libapache2-mod-wsgi
+  tags: [ 'packages' ]
 
 - name: ensure mod_wsgi enabled
   apache2_module: state=present name=wsgi
