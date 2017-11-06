@@ -8,3 +8,9 @@ ansible -a ls /etc/nginx/sites-enabled/ 192.168.0.87
 ansible-playbook site.yml --list-tags
 ansible-playbook site.yml --tags packages
 ansible-playbook site.yml --skip-tags packages
+ignore_errors: true can be used to go over that task if it failed
+ansible-playbook site.yml --list-tasks
+ansible-playbook site.yml --step
+ansible-playbook site.yml --start-at-task task_name
+ansible-playbook site.yml --syntax-check
+ansible-playbook site.yml --check # perform a dry run of the playbook
