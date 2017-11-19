@@ -9,5 +9,3 @@ kubernetes-minion1
 kubernetes-minion2
 kubernetes-minion3
 
-[test]
-kubernetes-minion1

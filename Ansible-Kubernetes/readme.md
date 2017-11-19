@@ -35,3 +35,7 @@ This will turn it off for all hosts you connect to. You can replace the * with a
 Make sure the permissions on the file restrict access to yourself only:
 
 sudo chmod 400 ~/.ssh/config
+
+First run prepare-ansible-target.yml
+
+run ansible-galaxy init role_name
