@@ -1,0 +1,14 @@
+---
+- hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Upgrade all packages
+      yum:
+        name: '*'
+        state: latest
+        
+
+- include: master.yml
+
+- include: minion.yml
