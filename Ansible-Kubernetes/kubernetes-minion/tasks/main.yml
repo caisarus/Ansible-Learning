@@ -1,2 +1,12 @@
 ---
 # tasks file for kubernetes-minion
+- name: install tools
+  yum: name={{item}} state=present
+  with_items:
+    - vim
+  tags: [ 'packages' ]
+
+- name: install kubernetes minions
+  script: kubernetes_minion.sh
+  tags: [ 'kubernetes install' ]
+

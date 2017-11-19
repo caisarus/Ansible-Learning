@@ -1,2 +1,11 @@
 ---
 # tasks file for kubernetes-master
+- name: install tools
+  yum: name={{item}} state=present
+  with_items:
+    - vim
+  tags: [ 'packages' ]
+
+- name: install kubernetes master
+  script: kubernetes_master.sh
+  tags: [ 'kubernetes install' ]

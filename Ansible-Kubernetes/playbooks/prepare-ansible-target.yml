@@ -28,7 +28,7 @@
 
 #Add entries to hosts file for the environment
     - name: Add entries to hosts file
-      script: ./hosts.sh
+      script: ../hosts.sh
 
 #Set hostname based on inventory file
     - name: Ensure hostname set

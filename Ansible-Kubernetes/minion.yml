@@ -2,4 +2,4 @@
 - hosts: minion
   become: yes
   roles:
-    - role: minion
+    - role: kubernetes-minion

@@ -2,4 +2,4 @@
 - hosts: master
   become: yes
   roles:
-    - role: master
+    - kubernetes-master
