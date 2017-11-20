@@ -12,6 +12,9 @@ sudo yum install ansible -y
 sudo yum update -y
 ssh-keygen
 #disable host key check
+in ~/.ssh/config
+echo "Host * \
+      StrictHostKeyChecking no" >> ~/.ssh/config 
 
 
 sudo useradd ansible
