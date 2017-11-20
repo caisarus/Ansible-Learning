@@ -8,4 +8,4 @@
 
 - name: install kubernetes master
   script: kubernetes_master.sh
-  tags: [ 'kubernetes install' ]
+  tags: [ 'kubernetes install all', 'kubernetes install master' ]

@@ -9,6 +9,6 @@
         state: latest
         
 
-- include: master.yml
+- import_playbook: master.yml
 
-- include: minion.yml
+- import_playbook: minion.yml
