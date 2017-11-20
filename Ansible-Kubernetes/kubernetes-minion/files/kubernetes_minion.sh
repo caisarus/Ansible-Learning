@@ -33,8 +33,8 @@ sed -i '/KUBELET_ADDRESS/d' /etc/kubernetes/kubelet
 sed -i '/The address for the info server to serve on/aKUBELET_ADDRESS="--address=0.0.0.0"' /etc/kubernetes/kubelet
 sed -i '/KUBELET_PORT/d' /etc/kubernetes/kubelet
 sed -i '/# The port for the info server to serve on/aKUBELET_PORT="--port=10250"' /etc/kubernetes/kubelet
-#sed -i '/KUBELET_HOSTNAME/d' /etc/kubernetes/kubelet
-#sed -i '/You may leave this blank to use the actual hostname/aKUBELET_HOSTNAME="--hostname-override=kubernetes-node1"' /etc/kubernetes/kubelet
+sed -i '/KUBELET_HOSTNAME/d' /etc/kubernetes/kubelet
+sed -i "/You may leave this blank to use the actual hostname/aKUBELET_HOSTNAME="--hostname-override=$HOSTNAME"" /etc/kubernetes/kubelet
 sed -i '/KUBELET_API_SERVER/d' /etc/kubernetes/kubelet
 sed -i '/location of the api-server/aKUBELET_API_SERVER="--api-servers=http://kubernetes-master:8080"' /etc/kubernetes/kubelet
 sed -i '/KUBELET_POD_INFRA_CONTAINER/d' /etc/kubernetes/kubelet
