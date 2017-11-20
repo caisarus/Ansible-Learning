@@ -8,13 +8,14 @@ sudo apt-get install ansible -y
 
 #Centos
 sudo yum install epel-release -y 
-sudo yum install ansible -y 
+sudo yum install ansible git vim -y 
 sudo yum update -y
 ssh-keygen
 #disable host key check
 in ~/.ssh/config
-echo "Host * \
-      StrictHostKeyChecking no" >> ~/.ssh/config 
+add "Host * 
+      StrictHostKeyChecking no" to ~/.ssh/config 
+chmod 400 ~/.ssh/config
 
 
 sudo useradd ansible
