@@ -1,0 +1,44 @@
+---
+#   Run with "ansible-playbook <filename> -k". This needs to be done with the "-k" for ssh password because raw commands would not work without
+#   make sure to add the IPs of machines you want to manage to /etc/ansible/hosts first
+#   make sure inventory file is defined from where you are running the playbooks
+#   make sure IP's are added to /etc/hosts so we can use hostnames in the inventory file
+
+- hosts: all
+  gather_facts: False   #as python may not be installed then we don't want to gather facts as this is done using python
+  remote_user: root     #user with which to login into system
+  become: yes           #if user is not root the we need to become root
+  become_user: root
+  become_method: sudo
+
+  tasks:
+#Install python using a raw command
+    - name: Install Python 2
+      raw: test -e /usr/bin/python || (apt-get update && apt-get install -y python)
+
+#If ansible user is not added then create and add to sudoers 
+    - name: Add ansible user
+      raw: getent passwd ansible || (useradd ansible && echo "ansible ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers)
+
+#Add public key to each host
+    - name: Fancy way of doing authorized_keys
+      authorized_key: user=ansible
+                      exclusive=no
+                      key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+#Add entries to hosts file for the environment
+    - name: Add entries to hosts file
+      script: ../hosts.sh
+
+#Set hostname based on inventory file
+    - name: Ensure hostname set
+      hostname: name={{ inventory_hostname }}
+      when: not inventory_hostname|match('(\d{1,3}\.){3}\d{1,3}')
+                
+#If we don't want to use the fancy way we can do it the old fashion way
+    #- name: Create /root/.ssh
+    #  file: path=/root/.ssh state=directory mode=0700
+
+    #- name: Create /root/.ssh/authorized_keys from our local ssh pubkey
+    #  lineinfile: dest=/root/.ssh/authorized_keys line="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+

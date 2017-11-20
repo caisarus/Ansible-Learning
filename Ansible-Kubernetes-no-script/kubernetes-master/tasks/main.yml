@@ -1,0 +1,95 @@
+---
+# tasks file for kubernetes-master
+- name: install tools
+  yum: name={{item}} state=present
+  with_items:
+    - vim
+  tags: [ 'packages' ]
+
+- name: install ntp
+  yum: name=ntp state=present
+  tags: [ 'kubernetes install all', 'kubernetes install master' ]
+  
+- name: configure ntp
+  lineinfile:
+    path: /etc/ntp.conf
+    regexp: 'restrict ::1'
+    line: 'restrict 192.168.0.0 mask 255.255.255.0 nomodify notrap'
+  notify:
+    - enable ntp
+    - restart ntp
+  tags: [ 'kubernetes install all', 'kubernetes install master' ]
+
+- name: add docker repository
+  yum_repository:
+    name: virt7-docker-common-release
+    description: Docker repository
+    baseurl: http://cbs.centos.org/repos/virt7-docker-common-release/x86_64/os/
+    gpgcheck: no
+    enabled: yes
+  tags: [ 'kubernetes install all', 'kubernetes install master' ]
+
+- name: update yum
+    name: '*'
+    state: latest
+  tags: [ 'kubernetes install all', 'kubernetes install master' ]
+
+- name: install kubernetes requirements
+  yum: name={{item}} state=present
+  with_items:
+    - kubernetes
+    - docker
+    - etcd
+  tags: [ 'kubernetes install all', 'kubernetes install master' ]
+
+- name: modify kubernetes config file 1
+  lineinfile:
+    path: /etc/kubernetes/config
+    regexp: 'KUBE_MASTER'
+    line: 'KUBE_MASTER="--master=http://kubernetes-master:8080"'
+  tags: [ 'kubernetes install all', 'kubernetes install master' ]
+
+- name: modify kubernetes config file 2
+  lineinfile:
+    path: /etc/kubernetes/config
+    line: 'KUBE_ETCD_SERVERS="--etcd-servers=http://kubernetes-master:2379"'
+  tags: [ 'kubernetes install all', 'kubernetes install master' ]
+
+- name: modify etcd config
+  lineinfile:
+    path: /etc/etcd/etcd.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: 'ETCD_LISTEN_CLIENT_URLS', line: 'ETCD_LISTEN_CLIENT_URLS="http://0.0.0.0:2379"' }
+    - { regexp: 'ETCD_ADVERTISE_CLIENT_URLS', line: 'ETCD_ADVERTISE_CLIENT_URLS="http://0.0.0.0:2379"' }
+  tags: [ 'kubernetes install all', 'kubernetes install master' ]
+
+- name: modify kubernetes apiserver config file
+  lineinfile:
+    path: /etc/kubernetes/apiserver
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: 'KUBE_API_ADDRESS', line: 'KUBE_API_ADDRESS="--address=0.0.0.0"' }
+    - { regexp: 'KUBE_API_PORT', line: 'KUBE_API_PORT="--port=8080"' }
+    - { regexp: 'KUBELET_PORT', line: 'KUBELET_PORT="--kubelet-port=10250"' }
+
+- name: finish up kubernetes install
+  lineinfile:
+    path: /etc/kubernetes/apiserver
+    state: absent
+    regexp: 'KUBE_ADMISSION_CONTROL'
+  notify: 
+    - enable kube-apiserver
+    - enable kube-controller-manager
+    - enable kube-scheduler
+    - start kube-apiserver
+    - start kube-controller-manager
+    - start kube-scheduler
+  tags: [ 'kubernetes install all', 'kubernetes install master' ]
+
+
+#- name: install kubernetes master
+ # script: kubernetes_master.sh
+  #tags: [ 'kubernetes install all', 'kubernetes install master' ]

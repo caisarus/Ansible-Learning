@@ -1,0 +1,85 @@
+---
+# tasks file for kubernetes-minion
+- name: install tools
+  yum: name={{item}} state=present
+  with_items:
+    - vim
+  tags: [ 'packages' ]
+
+- name: install ntp
+  yum: name=ntp state=present
+  tags: [ 'kubernetes install all', 'kubernetes install minion' ]
+  
+- name: configure ntp
+  lineinfile:
+    path: /etc/ntp.conf
+    regexp: 'restrict ::1'
+    line: 'restrict 192.168.0.0 mask 255.255.255.0 nomodify notrap'
+  notify:
+    - enable ntp
+    - restart ntp
+  tags: [ 'kubernetes install all', 'kubernetes install minion' ]
+
+- name: add docker repository
+  yum_repository:
+    name: virt7-docker-common-release
+    description: Docker repository
+    baseurl: http://cbs.centos.org/repos/virt7-docker-common-release/x86_64/os/
+    gpgcheck: no
+    enabled: yes
+  tags: [ 'kubernetes install all', 'kubernetes install minion' ]
+
+- name: update yum
+    name: '*'
+    state: latest
+  tags: [ 'kubernetes install all', 'kubernetes install minion' ]
+
+- name: install kubernetes requirements
+  yum: name={{item}} state=present
+  with_items:
+    - kubernetes
+    - docker
+  tags: [ 'kubernetes install all', 'kubernetes install minion' ]
+
+- name: modify kubernetes config file 1
+  lineinfile:
+    path: /etc/kubernetes/config
+    regexp: 'KUBE_MASTER'
+    line: 'KUBE_MASTER="--master=http://kubernetes-master:8080"'
+  tags: [ 'kubernetes install all', 'kubernetes install minion' ]
+
+- name: modify kubernetes config file 2
+  lineinfile:
+    path: /etc/kubernetes/config
+    line: 'KUBE_ETCD_SERVERS="--etcd-servers=http://kubernetes-master:2379"'
+  tags: [ 'kubernetes install all', 'kubernetes install minion' ]
+
+- name: modify kubelet config
+  lineinfile:
+    path: /etc/kubernetes/kubelet
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: 'KUBELET_ADDRESS', line: 'KUBELET_ADDRESS="--address=0.0.0.0"' }
+    - { regexp: 'KUBELET_PORT', line: 'KUBELET_PORT="--port=10250"' }
+    - { regexp: 'KUBELET_HOSTNAME', line: 'KUBELET_HOSTNAME="--hostname-override={{ inventory_hostname }}"' }
+    - { regexp: 'KUBELET_API_SERVER', line: 'KUBELET_API_SERVER="--api-servers=http://kubernetes-master:8080"' }
+  tags: [ 'kubernetes install all', 'kubernetes install minion' ]
+
+- name: finish up kubernetes install
+  lineinfile:
+    path: /etc/kubernetes/kubelet
+    state: absent
+    regexp: 'KUBELET_POD_INFRA_CONTAINER'
+  notify:
+    - enable kubelet
+    - enable docker
+    - start kubelet
+    - start docker
+  tags: [ 'kubernetes install all', 'kubernetes install minion' ]
+
+
+#- name: install kubernetes minions
+#  script: kubernetes_minion.sh
+#  tags: [ 'kubernetes install all', 'kubernetes install minion' ]
+

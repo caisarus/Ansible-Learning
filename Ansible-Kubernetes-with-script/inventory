@@ -1,0 +1,12 @@
+[controller]
+control ansible_connection=local
+
+[master]
+kubernetes-master
+
+[minion]
+kubernetes-minion1
+kubernetes-minion2
+kubernetes-minion3
+
+
