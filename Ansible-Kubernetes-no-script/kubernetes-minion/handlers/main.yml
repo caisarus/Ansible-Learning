@@ -6,13 +6,13 @@
 - name: restart ntp
   service: name=ntpd state=restarted use=service
 
-- name: enable kubelet
+- name: start kubelet
   service: name=kubelet enabled=true state=started use=service
 
 - name: restart kubelet
   service: name=kubelet state=restarted use=service
 
-- name: enable docker
+- name: start docker
   service: name=docker enabled=true state=started use=service
 
 - name: restart docker

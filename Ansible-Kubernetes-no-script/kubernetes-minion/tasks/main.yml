@@ -73,11 +73,12 @@
     state: absent
     regexp: 'KUBELET_POD_INFRA_CONTAINER'
   notify:
-    - enable kubelet
-    - enable docker
     - start kubelet
     - start docker
+    - restart kubelet
+    - restart docker
   tags: [ 'kubernetes install all', 'kubernetes install minion', 'test' ]
+
 
 
 #- name: install kubernetes minions
