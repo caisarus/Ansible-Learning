@@ -16,7 +16,7 @@
     regexp: 'restrict ::1'
     line: 'restrict 192.168.0.0 mask 255.255.255.0 nomodify notrap'
   notify:
-    - enable ntp
+    - start ntp
     - restart ntp
   tags: [ 'kubernetes install all', 'kubernetes install master' ]
 
@@ -30,6 +30,7 @@
   tags: [ 'kubernetes install all', 'kubernetes install master' ]
 
 - name: update yum
+  yum:
     name: '*'
     state: latest
   tags: [ 'kubernetes install all', 'kubernetes install master' ]
@@ -87,7 +88,7 @@
     - start kube-apiserver
     - start kube-controller-manager
     - start kube-scheduler
-  tags: [ 'kubernetes install all', 'kubernetes install master' ]
+  tags: [ 'kubernetes install all', 'kubernetes install master']
 
 
 #- name: install kubernetes master

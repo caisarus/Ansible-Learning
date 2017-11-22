@@ -6,19 +6,19 @@
 - name: restart ntp
   service: name=ntpd state=restarted
 
-- name: start kube-apiserver
+- name: enable kube-apiserver
   service: name=kube-apiserver enabled=yes state=started
 
 - name: restart kube-apiserver
   service: name=kube-apiserver state=restarted
 
-- name: start kube-controller-manager
+- name: enable kube-controller-manager
   service: name=kube-controller-manager enabled=yes state=started
 
 - name: restart kube-controller-manager
   service: name=kube-controller-manager state=restarted
 
-- name: start kube-scheduler
+- name: enable kube-scheduler
   service: name=kube-scheduler enabled=yes state=started
 
 - name: restart kube-scheduler
