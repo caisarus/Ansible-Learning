@@ -1,0 +1,30 @@
+---
+- hosts: minion
+  become: true
+  tasks:
+    - name: install necessary
+      yum: name={{item}} state=present
+      with_items:
+        - kubernetes
+        - docker
+        - etcd
+        - nano
+      notify: start kubelet
+      
+
+    - name: enable kubernetes
+      lineinfile:
+        path: /etc/kubernetes/kubelet
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      with_items:
+        - { regexp: 'KUBELET_ADDRESS', line: 'KUBELET_ADDRESS="--address=0.0.0.0"' }
+        - { regexp: 'KUBELET_PORT', line: 'KUBELET_PORT="--port=10250"' }
+        - { regexp: 'KUBELET_HOSTNAME', line: 'KUBELET_HOSTNAME="--hostname-override={{ inventory_hostname }}"' }
+        - { regexp: 'KUBELET_API_SERVER', line: 'KUBELET_API_SERVER="--api-servers=http://kubernetes-master:8080"' }
+      notify: 
+        - start kubelet
+
+  handlers: 
+    - name: start kubelet
+      service: name=kubelet enabled=true state=started

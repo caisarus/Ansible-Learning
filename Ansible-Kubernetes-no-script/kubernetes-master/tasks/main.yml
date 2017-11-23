@@ -85,9 +85,9 @@
     - enable kube-apiserver
     - enable kube-controller-manager
     - enable kube-scheduler
-    - start kube-apiserver
-    - start kube-controller-manager
-    - start kube-scheduler
+    - restart kube-apiserver
+    - restart kube-controller-manager
+    - restart kube-scheduler
   tags: [ 'kubernetes install all', 'kubernetes install master']
 
 
