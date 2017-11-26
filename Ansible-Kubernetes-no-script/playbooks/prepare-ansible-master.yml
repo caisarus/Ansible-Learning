@@ -11,6 +11,6 @@
     - name: Add entries to hosts file
       lineinfile:
         dest: /etc/hosts
-        line: '{{ item.ip }}    {{ item.alias }}'
+        line: '{{ item.ip }}    {{ item.hostname }}'
       with_items: '{{ hosts }}'
 
