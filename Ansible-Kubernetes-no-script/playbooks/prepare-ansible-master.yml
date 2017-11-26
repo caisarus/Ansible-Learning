@@ -1,0 +1,16 @@
+---
+#Add entries to host file using group_vars file
+- hosts: controller
+  gather_facts: False   #as python may not be installed then we don't want to gather facts as this is done using python
+  remote_user: root     #user with which to login into system
+  become: yes           #if user is not root the we need to become root
+  become_user: root
+  become_method: sudo
+
+  tasks:
+    - name: Add entries to hosts file
+      lineinfile:
+        dest: /etc/hosts
+        line: '{{ item.ip }}    {{ item.alias }}'
+      with_items: '{{ hosts }}'
+

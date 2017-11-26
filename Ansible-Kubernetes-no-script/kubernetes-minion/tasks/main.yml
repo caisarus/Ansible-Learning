@@ -46,13 +46,13 @@
   lineinfile:
     path: /etc/kubernetes/config
     regexp: 'KUBE_MASTER'
-    line: 'KUBE_MASTER="--master=http://kubernetes-master:8080"'
+    line: 'KUBE_MASTER="--master=http://{{ hosts[0].hostname }}:8080"'
   tags: [ 'kubernetes install all', 'kubernetes install minion' ]
 
 - name: modify kubernetes config file 2
   lineinfile:
     path: /etc/kubernetes/config
-    line: 'KUBE_ETCD_SERVERS="--etcd-servers=http://kubernetes-master:2379"'
+    line: 'KUBE_ETCD_SERVERS="--etcd-servers=http://{{ hosts[0].hostname }}:2379"'
   tags: [ 'kubernetes install all', 'kubernetes install minion' ]
 
 - name: modify kubelet config
@@ -64,7 +64,7 @@
     - { regexp: 'KUBELET_ADDRESS', line: 'KUBELET_ADDRESS="--address=0.0.0.0"' }
     - { regexp: 'KUBELET_PORT', line: 'KUBELET_PORT="--port=10250"' }
     - { regexp: 'KUBELET_HOSTNAME', line: 'KUBELET_HOSTNAME="--hostname-override={{ inventory_hostname }}"' }
-    - { regexp: 'KUBELET_API_SERVER', line: 'KUBELET_API_SERVER="--api-servers=http://kubernetes-master:8080"' }
+    - { regexp: 'KUBELET_API_SERVER', line: 'KUBELET_API_SERVER="--api-servers=http://{{ hosts[0].hostname }}:8080"' }
   tags: [ 'kubernetes install all', 'kubernetes install minion' ]
 
 - name: finish up kubernetes install
@@ -78,10 +78,4 @@
 #    - restart kubelet
 #    - restart docker
   tags: [ 'kubernetes install all', 'kubernetes install minion', 'test' ]
-
-
-
-#- name: install kubernetes minions
-#  script: kubernetes_minion.sh
-#  tags: [ 'kubernetes install all', 'kubernetes install minion' ]
 

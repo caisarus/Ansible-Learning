@@ -1,0 +1,14 @@
+hosts:
+  - ip: 192.168.0.99
+    alias: master
+    hostname: kubernetes-master
+  - ip: 192.168.0.96
+    alias: minion1
+    hostname: kubernetes-minion1
+  - ip: 192.168.0.97
+    alias: minion2
+    hostname: kubernetes-minion2
+  - ip: 192.168.0.98
+    alias: minion3
+    hostname: kubernetes-minion3
+

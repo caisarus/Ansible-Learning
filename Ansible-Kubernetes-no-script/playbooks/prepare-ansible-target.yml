@@ -14,7 +14,7 @@
   tasks:
 #Install python using a raw command
     - name: Install Python 2
-      raw: test -e /usr/bin/python || (apt-get update && apt-get install -y python)
+      raw: test -e /usr/bin/python || (yum update && yum install -y python)
 
 #If ansible user is not added then create and add to sudoers 
     - name: Add ansible user
@@ -28,7 +28,10 @@
 
 #Add entries to hosts file for the environment
     - name: Add entries to hosts file
-      script: ../hosts.sh
+      lineinfile:
+        dest: /etc/hosts
+        line: '{{ item.ip }}    {{ item.alias }}'
+      with_items: '{{ hosts }}'
 
 #Set hostname based on inventory file
     - name: Ensure hostname set

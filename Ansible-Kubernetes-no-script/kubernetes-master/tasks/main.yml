@@ -47,13 +47,13 @@
   lineinfile:
     path: /etc/kubernetes/config
     regexp: 'KUBE_MASTER'
-    line: 'KUBE_MASTER="--master=http://kubernetes-master:8080"'
+    line: 'KUBE_MASTER="--master=http://{{ hosts[0].hostname }}:8080"'
   tags: [ 'kubernetes install all', 'kubernetes install master' ]
 
 - name: modify kubernetes config file 2
   lineinfile:
     path: /etc/kubernetes/config
-    line: 'KUBE_ETCD_SERVERS="--etcd-servers=http://kubernetes-master:2379"'
+    line: 'KUBE_ETCD_SERVERS="--etcd-servers=http://{{ hosts[0].hostname }}:2379"'
   tags: [ 'kubernetes install all', 'kubernetes install master' ]
 
 - name: modify etcd config
@@ -81,14 +81,17 @@
     path: /etc/kubernetes/apiserver
     state: absent
     regexp: 'KUBE_ADMISSION_CONTROL'
-  notify: 
-    - enable kube-apiserver
-    - enable kube-controller-manager
-    - enable kube-scheduler
-    - restart kube-apiserver
-    - restart kube-controller-manager
-    - restart kube-scheduler
-  tags: [ 'kubernetes install all', 'kubernetes install master']
+#  notify: 
+#    - enable kube-apiserver
+#    - enable kube-controller-manager
+#    - enable kube-scheduler
+#    - restart kube-apiserver
+#    - restart kube-controller-manager
+#    - restart kube-scheduler
+#  tags: [ 'kubernetes install all', 'kubernetes install master']
+
+- name: enable kubernetes
+  raw: systemctl enable etcd kube-apiserver kube-controller-manager kube-scheduler && systemctl start etcd kube-apiserver kube-controller-manager kube-scheduler
 
 
 #- name: install kubernetes master
